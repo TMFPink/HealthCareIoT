@@ -1,0 +1,94 @@
+<ion-content>
+  <div
+    *ngIf="activeTab === 'live'"
+    echarts
+    [options]="chartOption"
+    class="chart-container"
+  ></div>
+  <div
+    *ngIf="activeTab === 'day'"
+    echarts
+    [options]="dayChartOption"
+    class="chart-container"
+  ></div>
+  <div
+    *ngIf="activeTab === 'month'"
+    echarts
+    [options]="monthChartOption"
+    class="chart-container"
+  ></div>
+  <div class="tabs">
+    <button
+      class="tab-button"
+      [class.active]="activeTab === 'live'"
+      (click)="switchTab('live')"
+    >
+      Live
+    </button>
+    <button
+      class="tab-button"
+      [class.active]="activeTab === 'day'"
+      (click)="switchTab('day')"
+    >
+      Day
+    </button>
+    <button
+      class="tab-button"
+      [class.active]="activeTab === 'month'"
+      (click)="switchTab('month')"
+    >
+      Month
+    </button>
+  </div>
+  <div class="flex flex-col items-center content-center">
+    <div
+      *ngIf="activeTab === 'day'"
+      class="absolute bottom-32 p-6 w-11/12 max-w-md rounded-3xl bg-white text-black shadow-xl text-center max-h-[280px] overflow-y-auto"
+    >
+      <h3>Day data</h3>
+      <div
+        *ngFor="let item of dayData"
+        class="flex justify-between items-center content-center"
+      >
+        <div class="flex flex-col w-[90px] items-center my-2">
+          <div
+            class="text-lg px-2 py-1 rounded-lg"
+            [ngClass]="getStatusBgColor(getStatus(item.value))"
+          >
+            {{ getStatus(item.value) }}
+          </div>
+          <div class="text-sm text-gray-400">{{ item.time }}</div>
+        </div>
+        <div class="text-lg">
+          Value: <span class="text-[var(--main-theme)]">{{ item.value }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-col items-center content-center">
+    <div
+      *ngIf="activeTab === 'month'"
+      class="absolute bottom-32 p-6 w-11/12 max-w-md rounded-3xl bg-white text-black shadow-xl text-center max-h-[280px] overflow-y-auto"
+    >
+      <h3>Month data</h3>
+      <div
+        *ngFor="let item of monthData"
+        class="flex justify-between items-center content-center"
+      >
+        <div class="flex flex-col w-[90px] items-center my-2">
+          <div
+            class="text-lg px-2 py-1 rounded-lg"
+            [ngClass]="getStatusBgColor(getStatus(item.value))"
+          >
+            {{ getStatus(item.value) }}
+          </div>
+          <div class="text-sm text-gray-400">{{ item.date }}</div>
+        </div>
+        <div class="text-lg">
+          Value: <span class="text-[var(--main-theme)]">{{ item.value }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

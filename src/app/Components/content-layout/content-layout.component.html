@@ -1,0 +1,36 @@
+<ion-router-outlet></ion-router-outlet>
+<div
+  class="fixed bottom-0 left-1/2 -translate-x-1/2 w-auto min-w-[300px] flex items-center justify-around p-5 bg-white mb-2 rounded-full"
+>
+  <div
+    (click)="onNavigate('/chart')"
+    [ngClass]="
+      isRouteActive('/chart')
+        ? 'text-[var(--main-theme)] text-5xl '
+        : 'text-3xl text-[var(--third-theme)]'
+    "
+  >
+    <nz-icon nzType="line-chart" nzTheme="outline" />
+  </div>
+
+  <div
+    (click)="onNavigate('/home')"
+    [ngClass]="
+      isRouteActive('/home')
+        ? 'text-5xl text-[var(--main-theme)]'
+        : 'text-3xl text-[var(--third-theme)]'
+    "
+  >
+    <nz-icon nzType="heart" nzTheme="outline" />
+  </div>
+  <div
+    (click)="onNavigate('/profile')"
+    [ngClass]="
+      isRouteActive('/profile')
+        ? 'text-5xl text-[var(--main-theme)]'
+        : 'text-3xl text-[var(--third-theme)]'
+    "
+  >
+    <nz-icon nzType="team" nzTheme="outline" />
+  </div>
+</div>

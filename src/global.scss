@@ -35,3 +35,18 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "ng-zorro-antd/ng-zorro-antd.css";
+@import "ng-zorro-antd/ng-zorro-antd.min.css";
+
+:root{
+    --main-theme: #f20044;
+    --third-theme: #ff6f9d;
+    --secondary-theme: #404040;
+    
+    --ion-background-color: #0b1522 !important;    
+}
