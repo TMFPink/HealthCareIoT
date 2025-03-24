@@ -3,7 +3,8 @@ import { IonContent } from '@ionic/angular/standalone';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { EChartsOption } from 'echarts';
 import { CommonModule } from '@angular/common';
-
+import { WebSocketService } from 'src/app/services/web-socket.service';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-chart',
   templateUrl: './chart.component.html',
@@ -20,11 +21,18 @@ export class ChartComponent implements OnInit {
   monthData: any[] = []; // Placeholder for month data
   dayChartOption: EChartsOption = {};
   monthChartOption: EChartsOption = {};
+  displayArray: any[] = [];
 
   ngOnInit(): void {
+    this.wsService.connect(environment.wsUrl);
+    this.wsService.onMessage().subscribe((data) => {
+      this.displayArray.push(data);
+      this.updateChart(); // Update chart whenever new data is received
+    });
     this.initChart();
-    this.startSimulation();
   }
+
+  constructor(private wsService: WebSocketService) {}
 
   ngOnDestroy(): void {
     clearInterval(this.intervalId);
@@ -46,8 +54,6 @@ export class ChartComponent implements OnInit {
       yAxis: {
         type: 'value',
         name: 'BPM',
-        min: 0, // Adjusted to fit ECG pattern
-        max: 30, // Adjusted to fit ECG pattern
       },
       series: [
         {
@@ -68,48 +74,47 @@ export class ChartComponent implements OnInit {
     };
   }
 
-  startSimulation(): void {
-    const ecgPattern = [10, 25, 10, 5, 10, 20, 10, 15, 10]; // Adjusted to fit yAxis range
-    let patternIndex = 0;
+  updateChart(): void {
+    console.log(this.displayArray);
+    console.log('Updating chart');
+    const maxDataPoints = 20; // Limit the number of data points displayed
+    const now = new Date();
+    const timeLabel = now.toLocaleTimeString().slice(0, 8);
 
-    this.intervalId = setInterval(() => {
-      const now = new Date();
-      const timeLabel = now.toLocaleTimeString().slice(0, 8);
-      const newBPM = ecgPattern[patternIndex];
+    this.labels.push(timeLabel);
+    this.data.push(this.displayArray[this.displayArray.length - 1]);
+    console.log(this.data);
+    if (this.labels.length > maxDataPoints) {
+      this.labels.shift();
+      this.data.shift();
+    }
 
-      this.labels.push(timeLabel);
-      this.data.push(newBPM);
-
-      if (this.labels.length > 20) {
-        this.labels.shift();
-        this.data.shift();
-      }
-
-      this.chartOption = {
-        ...this.chartOption,
-        xAxis: {
-          ...(this.chartOption.xAxis as any),
-          data: this.labels,
-        },
-        series: [
-          {
-            name: 'Heart Rate',
-            type: 'line',
-            data: this.data,
-            smooth: true, // Disable smoothing for sharp peaks
-            lineStyle: {
-              width: 3,
-            },
-            itemStyle: {
-              color: '#ff4d4f',
-            },
-            showSymbol: false,
+    this.chartOption = {
+      ...this.chartOption,
+      xAxis: {
+        ...(this.chartOption.xAxis as any),
+        data: this.labels,
+      },
+      series: [
+        {
+          name: 'Heart Rate',
+          type: 'line',
+          data: this.data,
+          smooth: true,
+          lineStyle: {
+            width: 3,
           },
-        ],
-      };
+          itemStyle: {
+            color: '#ff4d4f',
+          },
+          showSymbol: false,
+        },
+      ],
+    };
+  }
 
-      patternIndex = (patternIndex + 1) % ecgPattern.length; // Loop through the pattern
-    }, 200); // Faster interval for ECG-like animation
+  startSimulation(): void {
+    // Remove the simulation logic since data is now coming from displayArray
   }
 
   switchTab(tab: 'live' | 'day' | 'month'): void {
@@ -194,8 +199,6 @@ export class ChartComponent implements OnInit {
       yAxis: {
         type: 'value',
         name: 'BPM',
-        min: 0,
-        max: 100,
       },
       series: [
         {
@@ -233,8 +236,6 @@ export class ChartComponent implements OnInit {
       yAxis: {
         type: 'value',
         name: 'BPM',
-        min: 0,
-        max: 100,
       },
       series: [
         {

@@ -1,6 +1,8 @@
 import { Component, OnInit, Renderer2, ElementRef } from '@angular/core';
 import { IonContent } from '@ionic/angular/standalone';
-
+import { Subject } from 'rxjs';
+import { WebSocketService } from 'src/app/services/web-socket.service';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
@@ -9,8 +11,21 @@ import { IonContent } from '@ionic/angular/standalone';
 })
 export class HomePageComponent implements OnInit {
   currentHeartRate = 120;
+  displayValue: Subject<number> = new Subject<number>();
+  displayValueNumber: number = 0; // Add this variable to store the emitted value
 
-  constructor(private renderer: Renderer2, private el: ElementRef) {}
+  constructor(
+    private renderer: Renderer2,
+    private el: ElementRef,
+    private wsService: WebSocketService
+  ) {
+    this.wsService.connect(environment.wsUrl);
+    this.wsService.onMessage().subscribe((data) => {
+      // Update the variable with the emitted value
+      this.displayValueNumber = data;
+      this.displayValue.next(data);
+    });
+  }
 
   ngOnInit() {
     this.updateAnimationSpeed(this.currentHeartRate);
