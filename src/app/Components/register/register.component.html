@@ -1,0 +1,86 @@
+<ion-content>
+  <form
+    [formGroup]="registerForm"
+    (ngSubmit)="onSubmit()"
+    class="max-w-md mx-auto p-8 h-screen shadow-lg rounded-lg space-y-6"
+  >
+    <div>
+      <label for="email" class="block text-lg font-medium text-white mb-2"
+        >Email</label
+      >
+      <input
+        id="email"
+        formControlName="email"
+        type="email"
+        class="mt-2 block w-full border border-white rounded-lg shadow-sm text-lg h-12"
+      />
+      <div
+        *ngIf="
+          registerForm.get('email')?.invalid &&
+          registerForm.get('email')?.touched
+        "
+        class="text-red-600 text-sm mt-2"
+      >
+        Valid email is required.
+      </div>
+    </div>
+
+    <div>
+      <label for="password" class="block text-lg font-medium text-white mb-2"
+        >Password</label
+      >
+      <input
+        id="password"
+        formControlName="password"
+        type="password"
+        class="mt-2 block w-full border border-white rounded-lg shadow-sm text-lg h-12"
+      />
+      <div
+        *ngIf="
+          registerForm.get('password')?.invalid &&
+          registerForm.get('password')?.touched
+        "
+        class="text-red-600 text-sm mt-2"
+      >
+        Password must be at least 6 characters.
+      </div>
+    </div>
+
+    <div>
+      <label
+        for="confirmPassword"
+        class="block text-lg font-medium text-white mb-2"
+        >Confirm Password</label
+      >
+      <input
+        id="confirmPassword"
+        formControlName="confirmPassword"
+        type="password"
+        class="mt-2 block w-full border border-white rounded-lg shadow-sm text-lg h-12"
+      />
+      <div
+        *ngIf="
+          registerForm.hasError('mismatch') &&
+          registerForm.get('confirmPassword')?.touched
+        "
+        class="text-red-600 text-sm mt-2"
+      >
+        Passwords do not match.
+      </div>
+    </div>
+
+    <div
+      class="w-full bg-white content-center justify-center flex items-center text-black py-3 px-4 rounded-lg h-10"
+      (click)="onSubmit()"
+    >
+      Sign up
+    </div>
+
+    <div class="text-center text-sm text-white mt-6">
+      Already have an account?
+      <a routerLink="/auth/login" class="text-indigo-600 hover:underline"
+        >Sign in</a
+      >
+    </div>
+  </form>
+</ion-content>

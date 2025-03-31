@@ -5,6 +5,8 @@ import { EChartsOption } from 'echarts';
 import { CommonModule } from '@angular/common';
 import { WebSocketService } from 'src/app/services/web-socket.service';
 import { environment } from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
+
 @Component({
   selector: 'app-chart',
   templateUrl: './chart.component.html',
@@ -32,7 +34,7 @@ export class ChartComponent implements OnInit {
     this.initChart();
   }
 
-  constructor(private wsService: WebSocketService) {}
+  constructor(private wsService: WebSocketService, private http: HttpClient) {}
 
   ngOnDestroy(): void {
     clearInterval(this.intervalId);
@@ -75,20 +77,18 @@ export class ChartComponent implements OnInit {
   }
 
   updateChart(): void {
-    console.log(this.displayArray);
-    console.log('Updating chart');
     const maxDataPoints = 20; // Limit the number of data points displayed
     const now = new Date();
     const timeLabel = now.toLocaleTimeString().slice(0, 8);
 
     this.labels.push(timeLabel);
     this.data.push(this.displayArray[this.displayArray.length - 1]);
-    console.log(this.data);
+
     if (this.labels.length > maxDataPoints) {
       this.labels.shift();
       this.data.shift();
     }
-
+    console.log(this.labels, this.data);
     this.chartOption = {
       ...this.chartOption,
       xAxis: {
@@ -113,10 +113,6 @@ export class ChartComponent implements OnInit {
     };
   }
 
-  startSimulation(): void {
-    // Remove the simulation logic since data is now coming from displayArray
-  }
-
   switchTab(tab: 'live' | 'day' | 'month'): void {
     this.activeTab = tab;
     if (tab === 'day') {
@@ -129,33 +125,49 @@ export class ChartComponent implements OnInit {
   }
 
   loadDayData(): void {
-    this.dayData = [
-      { time: '08:00', value: 72 },
-      { time: '09:00', value: 74 },
-      { time: '10:00', value: 76 },
-      { time: '11:00', value: 50 },
-      { time: '12:00', value: 75 },
-      { time: '13:00', value: 73 },
-      { time: '14:00', value: 72 },
-      { time: '15:00', value: 71 },
-      { time: '16:00', value: 80 },
-      { time: '17:00', value: 72 },
-    ];
+    this.http
+      .get<{ status: string; data: { timestamp: string; value: number }[] }>(
+        `${environment.apiUrl}/bpm-data/days`
+      )
+      .subscribe({
+        next: (response) => {
+          if (response.status === 'success') {
+            this.dayData = response.data.map((item) => ({
+              time: new Date(item.timestamp).toLocaleTimeString(),
+              value: item.value,
+            }));
+            this.initDayChart();
+          } else {
+            console.error('Unexpected response status:', response.status);
+          }
+        },
+        error: (err) => {
+          console.error('Failed to load day data', err);
+        },
+      });
   }
 
   loadMonthData(): void {
-    this.monthData = [
-      { date: '2023-10-01', value: 72 },
-      { date: '2023-10-02', value: 74 },
-      { date: '2023-10-03', value: 73 },
-      { date: '2023-10-04', value: 85 },
-      { date: '2023-10-05', value: 76 },
-      { date: '2023-10-06', value: 74 },
-      { date: '2023-10-07', value: 42 },
-      { date: '2023-10-08', value: 71 },
-      { date: '2023-10-09', value: 73 },
-      { date: '2023-10-10', value: 74 },
-    ];
+    this.http
+      .get<{ status: string; data: { timestamp: string; value: number }[] }>(
+        `${environment.apiUrl}/bpm-data/month`
+      )
+      .subscribe({
+        next: (response) => {
+          if (response.status === 'success') {
+            this.monthData = response.data.map((item) => ({
+              date: new Date(item.timestamp).toLocaleDateString(),
+              value: item.value,
+            }));
+            this.initMonthChart();
+          } else {
+            console.error('Unexpected response status:', response.status);
+          }
+        },
+        error: (err) => {
+          console.error('Failed to load month data', err);
+        },
+      });
   }
 
   getStatus(value: number): string {

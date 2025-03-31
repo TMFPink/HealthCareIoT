@@ -22,7 +22,7 @@ export class HomePageComponent implements OnInit {
     this.wsService.connect(environment.wsUrl);
     this.wsService.onMessage().subscribe((data) => {
       // Update the variable with the emitted value
-      this.displayValueNumber = data;
+      this.displayValueNumber = data.value;
       this.displayValue.next(data);
     });
   }

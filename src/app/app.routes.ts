@@ -4,8 +4,29 @@ import { HomePageComponent } from './Components/home-page/home-page.component';
 import { ChartComponent } from './Components/chart/chart.component';
 import { importProvidersFrom } from '@angular/core';
 import { NgxEchartsModule } from 'ngx-echarts';
+import { LoginComponent } from './Components/login/login.component';
+import { RegisterComponent } from './Components/register/register.component';
+import { TelegramComponent } from './Components/telegram/telegram.component';
 
 export const routes: Routes = [
+  {
+    path: 'auth',
+    children: [
+      {
+        path: 'login',
+        component: LoginComponent,
+      },
+      {
+        path: 'register',
+        component: RegisterComponent,
+      },
+      {
+        path: '**',
+        redirectTo: 'login',
+        pathMatch: 'full',
+      },
+    ],
+  },
   {
     path: '',
     component: ContentLayoutComponent,
@@ -17,6 +38,10 @@ export const routes: Routes = [
       {
         path: 'chart',
         component: ChartComponent,
+      },
+      {
+        path: 'profile',
+        component: TelegramComponent,
       },
       {
         path: '**',

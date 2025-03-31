@@ -12,8 +12,8 @@ export class WebSocketService {
     this.socket = new WebSocket(url);
 
     this.socket.onmessage = (event) => {
-      console.log('WebSocket message:', event.data);
       const data = JSON.parse(event.data);
+      console.log('WebSocket message:', data);
       this.messageSubject.next(data);
     };
 
