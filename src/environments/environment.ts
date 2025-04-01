@@ -4,10 +4,10 @@
 
 export const environment = {
   production: false,
-  // apiUrl: 'https://healthcareiot-api.onrender.com',
-  apiUrl: 'http://localhost:3000',
-  // wsUrl: 'wss://healthcareiot-api.onrender.com',
-  wsUrl: 'ws://localhost:3000',
+  apiUrl: 'https://healthcareiot-api.onrender.com',
+  // apiUrl: 'http://localhost:3000',
+  wsUrl: 'wss://healthcareiot-api.onrender.com',
+  // wsUrl: 'ws://localhost:3000',
 };
 
 /*
