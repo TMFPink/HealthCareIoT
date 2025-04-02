@@ -43,13 +43,20 @@
   <div class="flex flex-col items-center content-center">
     <div
       *ngIf="activeTab === 'day'"
-      class="absolute bottom-32 p-6 w-11/12 max-w-md rounded-3xl bg-white text-black shadow-xl text-center max-h-[280px] overflow-y-auto"
+      class="absolute bottom-32 p-6 w-11/12 max-w-md rounded-3xl bg-white text-black shadow-xl text-center h-[280px] overflow-y-auto"
     >
-      <h3>Day data</h3>
+      <h3>Day Data</h3>
+      <input
+        type="date"
+        class="mb-4 p-2 border rounded"
+        [(ngModel)]="selectedDate"
+        (change)="loadDayData()"
+      />
       <div
         *ngFor="let item of dayData"
         class="flex justify-between items-center content-center"
       >
+        @if (item.value) {
         <div class="flex flex-col w-[90px] items-center my-2">
           <div
             class="text-lg px-2 py-1 rounded-lg"
@@ -60,8 +67,12 @@
           <div class="text-sm text-gray-400">{{ item.time }}</div>
         </div>
         <div class="text-lg">
-          Value: <span class="text-[var(--main-theme)]">{{ item.value }}</span>
+          Value:
+          <span class="text-[var(--main-theme)]">{{
+            item.value | number : "1.2-2"
+          }}</span>
         </div>
+        }
       </div>
     </div>
   </div>
@@ -69,13 +80,20 @@
   <div class="flex flex-col items-center content-center">
     <div
       *ngIf="activeTab === 'month'"
-      class="absolute bottom-32 p-6 w-11/12 max-w-md rounded-3xl bg-white text-black shadow-xl text-center max-h-[280px] overflow-y-auto"
+      class="absolute bottom-32 p-6 w-11/12 max-w-md rounded-3xl bg-white text-black shadow-xl text-center h-[280px] overflow-y-auto"
     >
-      <h3>Month data</h3>
+      <h3>Month Data</h3>
+      <input
+        type="month"
+        class="mb-4 p-2 border rounded"
+        [(ngModel)]="selectedMonth"
+        (change)="loadMonthData()"
+      />
       <div
         *ngFor="let item of monthData"
         class="flex justify-between items-center content-center"
       >
+        @if (item.value) {
         <div class="flex flex-col w-[90px] items-center my-2">
           <div
             class="text-lg px-2 py-1 rounded-lg"
@@ -86,8 +104,12 @@
           <div class="text-sm text-gray-400">{{ item.date }}</div>
         </div>
         <div class="text-lg">
-          Value: <span class="text-[var(--main-theme)]">{{ item.value }}</span>
+          Value:
+          <span class="text-[var(--main-theme)]">{{
+            item.value | number : "1.2-2"
+          }}</span>
         </div>
+        }
       </div>
     </div>
   </div>

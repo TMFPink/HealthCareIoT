@@ -1,5 +1,7 @@
 {
   "name": "HCIoT-fe",
-  "integrations": {},
-  "type": "angular-standalone"
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
 }
