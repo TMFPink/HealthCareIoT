@@ -12,7 +12,10 @@ import { environment } from 'src/environments/environment';
 export class HomePageComponent implements OnInit {
   currentHeartRate = 120;
   displayValue: Subject<number> = new Subject<number>();
-  displayValueNumber: number = 0; // Add this variable to store the emitted value
+  displayValueNumber: number = 0;
+  minHeartRate: number = 0;
+  maxHeartRate: number = 0;
+  avgHeartRate: string = '';
 
   constructor(
     private renderer: Renderer2,
@@ -23,6 +26,9 @@ export class HomePageComponent implements OnInit {
     this.wsService.onMessage().subscribe((data) => {
       // Update the variable with the emitted value
       this.displayValueNumber = data.value;
+      this.minHeartRate = data.min;
+      this.maxHeartRate = data.max;
+      this.avgHeartRate = data.avg;
       this.displayValue.next(data);
     });
   }
