@@ -89,15 +89,14 @@ export class ChartComponent implements OnInit {
     const timeLabel = now.toLocaleTimeString().slice(0, 8);
 
     const latestData = this.displayArray[this.displayArray.length - 1];
-    if (latestData != null) {
+    if (latestData != null && typeof latestData.value === 'number') {
       this.labels.push(timeLabel);
-      this.data.push(parseFloat(latestData.toFixed(2)));
+      this.data.push(parseFloat(latestData.value.toFixed(2)));
 
       if (this.labels.length > maxDataPoints) {
         this.labels.shift();
         this.data.shift();
       }
-      console.log(this.labels, this.data);
 
       this.chartOption = {
         ...this.chartOption,
@@ -121,6 +120,8 @@ export class ChartComponent implements OnInit {
           },
         ],
       };
+    } else {
+      console.error('Invalid data format:', latestData);
     }
   }
 
